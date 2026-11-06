@@ -1,12 +1,14 @@
-# uvcview — HIK UVC 热成像相机实时预览
+# uvcview — 海康 4117 DIY 热成像仪实时预览
 
-这是一个独立的 Cardputer Zero 热成像相机 App，使用 **libuvc + libjpeg**，
+这是一个独立的 Cardputer Zero 热成像仪 App，硬件是 **DIY 组装的海康 4117
+热成像仪**（不是 HIK 品牌整机），使用 **libuvc + libjpeg**，
 绕过 Linux 的 `uvcvideo`/V4L2 直接读取 USB 摄像头数据，然后写
 `/dev/fb_lcd`（320×170）显示。
 
 ## 为什么不用 V4L2
 
-在 Cardputer Zero 的 Linux 上，这个 HIK 相机（USB `2bdf:0101`）虽然会被
+在 Cardputer Zero 的 Linux 上，这台 DIY 热成像仪（USB `2bdf:0101`，被识别
+成普通 UVC 摄像头）虽然会被
 `uvcvideo` 识别并创建 `/dev/video1`，但取流结果损坏：
 
 ```text
@@ -185,8 +187,8 @@ USB 设备添加 udev 权限后以普通用户运行。
 ## 画面说明
 
 设备实际发送的是 **JPEG** 帧，程序会跳过不是 `FF D8` 开头的损坏帧。
-屏幕上的 “Max xx.x°C” 等文字是相机画面本身的一部分，本程序目前只做
-图像显示，不解析相机内部的温度数据/扩展单元。
+屏幕上的 “Max xx.x°C” 等文字是热成像仪画面本身的一部分，本程序目前只做
+图像显示，不解析模块内部的温度数据/扩展单元。
 
 ## 错误提示
 

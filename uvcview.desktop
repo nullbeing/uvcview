@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Thermal Camera
-Comment=HIK UVC thermal camera viewer
+Comment=Hikvision 4117 DIY thermal camera viewer (Cardputer Zero)
 Exec=bin/run-uvcview
 Terminal=false
 Icon=share/images/camera1.png
