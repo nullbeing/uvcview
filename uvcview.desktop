@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Thermal Camera
+Comment=HIK UVC thermal camera viewer
+Exec=bin/run-uvcview
+Terminal=false
+Icon=share/images/camera1.png
+Type=Application
