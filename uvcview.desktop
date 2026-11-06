@@ -3,5 +3,5 @@ Name=Thermal Camera
 Comment=Hikvision 4117 DIY thermal camera viewer (Cardputer Zero)
 Exec=bin/run-uvcview
 Terminal=false
-Icon=share/images/camera1.png
+Icon=share/images/thermalcam.png
 Type=Application

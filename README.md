@@ -49,12 +49,15 @@ sudo install -d /usr/share/APPLaunch/bin
 sudo install -m 755 run-uvcview /usr/share/APPLaunch/bin/run-uvcview
 sudo install -m 644 uvcview.desktop \
     /usr/share/APPLaunch/applications/uvcview.desktop
+sudo install -d /usr/share/APPLaunch/share/images
+sudo install -m 644 images/thermalcam.png \
+    /usr/share/APPLaunch/share/images/thermalcam.png
 ```
 
-图标使用系统已有的 `camera1.png`：
+图标是本仓库自带的 `images/thermalcam.png`（80×80 RGBA），安装到：
 
 ```text
-/usr/share/APPLaunch/share/images/camera1.png
+/usr/share/APPLaunch/share/images/thermalcam.png
 ```
 
 然后安装专用 sudo 规则，让 APPLaunch 里的 `pi` 用户可以免密以 root
