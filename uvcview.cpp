@@ -600,17 +600,17 @@ void draw_overlay(std::vector<uint16_t>& out, int dw, int dh,
     }
 
     const char* labels[5] = {"4 AR", "5 VM", "6 HM", "7 PIC", "8 VIEW"};
-    const int keys[5] = {4, 5, 6, 7, 8};
     const bool active[5] = {scale_mode == 0, flip_v, flip_h,
                             false, photo_mode};
-    const int cy = dh - 20;
     const int half_w = 24;
     const int radius = 11;
+    // Official CardputerZero key-hint layout (cp0-keys): the five most used
+    // actions sit on physical keys 4..8. Recommended icon centres on a
+    // 320x170 screen are x = 49, 105, 161, 217, 273 and y = 153.
+    const int cy = std::min(dh - radius - 2, dh * 153 / 170);
 
     for (int i = 0; i < 5; ++i) {
-        // Align the four pills with physical keys 5..8. The user's
-        // keyboard has 3 and 9 at the two screen corners.
-        const int cx = static_cast<int>((keys[i] - 3) * dw / 6.0);
+        const int cx = (49 + i * 56) * dw / 320;
         draw_pill_button(out, dw, dh, cx, cy, half_w, radius, active[i]);
         const uint16_t label_color = active[i] ? 0x0000 : 0xffff;
         if (g_font.valid()) {
