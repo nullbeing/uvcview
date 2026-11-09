@@ -60,22 +60,25 @@ sudo install -m 644 images/thermalcam.png \
 /usr/share/APPLaunch/share/images/thermalcam.png
 ```
 
-然后安装专用 sudo 规则，让 APPLaunch 里的 `pi` 用户可以免密以 root
-运行查看器：
+然后安装 udev 规则，让普通用户 `pi` 可以直接打开 USB 设备（不需要 root）：
 
 ```bash
-sudo tee /etc/sudoers.d/uvcview >/dev/null <<'EOF'
-%sudo ALL=(root) NOPASSWD: /usr/local/bin/uvcview
-EOF
-sudo chmod 440 /etc/sudoers.d/uvcview
-sudo visudo -cf /etc/sudoers.d/uvcview
+sudo install -m 644 99-uvcview.rules /etc/udev/rules.d/99-uvcview.rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=usb
 ```
 
-如果没有这条规则，`run-uvcview` 里的 `sudo -n` 会失败，APPLaunch 看起来
-就是“闪一下”。现在即使 sudo 失败，wrapper 也会退回普通用户运行，
-由 App 自己显示可读的错误画面。
+规则内容：
 
-然后重启 APPLaunch：
+```text
+SUBSYSTEM=="usb", ATTRS{idVendor}=="2bdf", ATTRS{idProduct}=="0101", \
+  MODE="0660", GROUP="plugdev"
+```
+
+`pi` 在 `plugdev` 组里，所以应用完全以普通用户运行；
+framebuffer（`video` 组）和背光（`video` 组可写）也都有权限。
+
+重新插拔一次相机会更稳妥。然后重启 APPLaunch：
 
 ```bash
 export XDG_RUNTIME_DIR=/run/user/1000
@@ -87,23 +90,33 @@ APPLaunch 中应出现 **Thermal Camera**。
 
 ## 权限
 
-libuvc 需要打开 USB 设备；在 Cardputer Zero 上，普通用户会得到：
+libuvc 需要打开 USB 设备。没有 udev 规则时，普通用户会得到：
 
 ```text
 uvc_open: Access denied
 ```
 
-`run-uvcview` 使用 `sudo -n` 以 root 运行，APPLaunch 的 `pi` 用户已配置
-免密 sudo。也可以手动运行：
+装好 `99-uvcview.rules` 后设备节点是 `root:plugdev 0660`，`pi` 属于
+`plugdev`，因此**不需要 root / sudo**，直接运行即可：
 
 ```bash
-sudo /usr/local/bin/uvcview \
+/usr/local/bin/uvcview \
     -d /dev/fb_lcd \
     -k /dev/input/by-path/platform-3f804000.i2c-event
 ```
 
-如果手动以普通用户运行时提示 USB 访问失败，请使用 `sudo`，或者给
-USB 设备添加 udev 权限后以普通用户运行。
+检查设备权限：
+
+```bash
+lsusb | grep 2bdf
+ls -l /dev/bus/usb/*/*        # 对应节点应为 root plugdev 0660
+```
+
+如果仍然 Access denied，重新插拔相机或执行：
+
+```bash
+sudo udevadm control --reload-rules && sudo udevadm trigger --subsystem-match=usb
+```
 
 ## 参数
 

@@ -1,0 +1,3 @@
+# CardputerZero thermal camera (HIK HikCamera, 2bdf:0101)
+# Lets the desktop user (pi) open the UVC device through libusb without root.
+SUBSYSTEM=="usb", ATTRS{idVendor}=="2bdf", ATTRS{idProduct}=="0101", MODE="0660", GROUP="plugdev"

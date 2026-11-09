@@ -720,7 +720,8 @@ int main(int argc, char** argv) {
 
     if (geteuid() != 0) {
         std::fprintf(stderr,
-                     "warning: not running as root; USB access may fail\n");
+                     "note: running as user; USB access via udev rule "
+                     "(99-uvcview.rules)\n");
     }
 
     std::signal(SIGINT, on_signal);
